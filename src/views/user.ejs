@@ -1,0 +1,56 @@
+<%- include('partials/head') %>
+<body>
+    <%- include('partials/navbar') %>
+    
+    <div class="container mt-5">
+        <%- include('partials/flash') %>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center mb-0">Saved Conversions</h2>
+                    </div>
+                    <div class="card-body">
+                        <% if (conversions && conversions.length > 0) { %>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Amount</th>
+                                            <th>Result</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% conversions.forEach(conversion => { %>
+                                            <tr>
+                                                <td><%= new Date(conversion.conversion_date).toLocaleDateString() %></td>
+                                                <td><%= conversion.base_rate %></td>
+                                                <td><%= conversion.target_rate %></td>
+                                                <td><%= conversion.base_value %></td>
+                                                <td><%= conversion.converted_value %></td>
+                                                <td>
+                                                    <form action="/remove-conversion" method="POST" class="d-inline">
+                                                        <input type="hidden" name="id" value="<%= conversion.id %>">
+                                                        <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% } else { %>
+                            <p class="text-center">No saved conversions yet.</p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

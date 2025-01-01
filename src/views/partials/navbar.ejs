@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/">Currency Converter</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <% if (user) { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/convert">Convert</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/history">History</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user">My Conversions</a>
+        </li>
+        <% } %>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <button
+            class="btn nav-link d-flex align-items-center gap-2"
+            id="themeToggle"
+          >
+            <i class="bi bi-sun-fill theme-icon-light"></i>
+            <i class="bi bi-moon-fill theme-icon-dark"></i>
+          </button>
+        </li>
+        <% if (user) { %>
+        <li class="nav-item">
+          <form action="/logout" method="POST" class="d-inline">
+            <button type="submit" class="btn nav-link">Logout</button>
+          </form>
+        </li>
+        <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Register</a>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>

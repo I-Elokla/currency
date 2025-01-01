@@ -1,0 +1,112 @@
+<%- include('partials/head') %>
+<body>
+    <%- include('partials/navbar') %>
+    
+    <div class="container mt-5">
+        <%- include('partials/flash') %>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center mb-0">Historical Rates</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/history" method="GET">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label for="startDate" class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="startDate" name="startDate" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="endDate" class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="endDate" name="endDate" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="baseCurrency" class="form-label">Base Currency</label>
+                                    <select class="form-select" id="baseCurrency" name="baseCurrency" required>
+                                        <% currencies.forEach(currency => { %>
+                                            <option value="<%= currency %>"><%= currency %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="targetCurrency" class="form-label">Target Currency</label>
+                                    <select class="form-select" id="targetCurrency" name="targetCurrency" required>
+                                        <% currencies.forEach(currency => { %>
+                                            <option value="<%= currency %>"><%= currency %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Get Historical Data</button>
+                            </div>
+                        </form>
+
+                        <% if (historicalData) { %>
+                            <div class="mt-4">
+                                <canvas id="ratesChart"></canvas>
+                            </div>
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                            <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+                            <script>
+                                const historicalData = <%- JSON.stringify(historicalData) %>;
+                                const targetCurrency = '<%= targetCurrency %>';
+                                const baseCurrency = '<%= baseCurrency %>';
+
+                                const ctx = document.getElementById('ratesChart').getContext('2d');
+
+                                new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: Object.keys(historicalData.rates), 
+                                        datasets: [{
+                                            label: `${targetCurrency} to ${baseCurrency}`,
+                                            data: Object.values(historicalData.rates).map(d => d[targetCurrency]),
+                                            borderColor: 'rgb(75, 192, 192)',
+                                            tension: 0.1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        scales: {
+                                            x: {
+                                                type: 'time',
+                                                time: {
+                                                    unit: 'week',
+                                                    tooltipFormat: 'yyyy-MM-dd'
+                                                },
+                                                title: {
+                                                    display: true,
+                                                    text: 'Date'
+                                                }
+                                            },
+                                            y: {
+                                                beginAtZero: false,
+                                                title: {
+                                                    display: true,
+                                                    text: 'Exchange Rate'
+                                                }
+                                            }
+                                        },
+                                        plugins: {
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(context) {
+                                                        return `${context.dataset.label}: ${context.raw.toFixed(5)}`;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

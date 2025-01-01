@@ -1,0 +1,60 @@
+<%- include('partials/head') %>
+<body>
+    <%- include('partials/navbar') %>
+    
+    <div class="container mt-5">
+        <%- include('partials/flash') %>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center mb-0">Currency Converter</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/convert" method="POST">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="baseAmount" class="form-label">Amount</label>
+                                    <input type="number" class="form-control" id="baseAmount" name="baseAmount" step="0.01" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="baseCurrency" class="form-label">From</label>
+                                    <select class="form-select" id="baseCurrency" name="baseCurrency" required>
+                                        <% currencies.forEach(currency => { %>
+                                            <option value="<%= currency %>"><%= currency %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="targetCurrency" class="form-label">To</label>
+                                    <select class="form-select" id="targetCurrency" name="targetCurrency" required>
+                                        <% currencies.forEach(currency => { %>
+                                            <option value="<%= currency %>"><%= currency %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Convert</button>
+                            </div>
+                        </form>
+
+                        <% if (result) { %>
+                            <div class="mt-4">
+                                <div class="alert alert-success">
+                                    <%= result.amount %> <%= result.base %> = <%= result.result.toFixed(2) %> <%= result.target %>
+                                    <form action="/save-conversion" method="POST" class="mt-2">
+                                        <input type="hidden" name="conversion" value="<%= JSON.stringify(result) %>">
+                                        <button type="submit" class="btn btn-sm btn-outline-success">Save Conversion</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
